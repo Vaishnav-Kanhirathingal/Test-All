@@ -36,6 +36,3 @@ interface TypicodeApi {
 enum class CallStatus {
     LOADING, ERROR, DONE
 }
-
-fun main(){
-}
