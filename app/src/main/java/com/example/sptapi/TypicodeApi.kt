@@ -7,29 +7,35 @@ import retrofit2.http.GET
 
 val retrofit = Retrofit
     .Builder()
-    .baseUrl("https://jsonplaceholder.typicode.com")
+    .baseUrl("https://jsonplaceholder.typicode.com/")
     .addConverterFactory(GsonConverterFactory.create())
+    .build()
+
+val retrofitService :TypicodeApi by lazy { retrofit.create(TypicodeApi::class.java) }
 
 interface TypicodeApi {
-    @GET("/posts")
+    @GET("posts")
     suspend fun getPosts(): List<Posts>
 
-    @GET("/comments")
+    @GET("comments")
     suspend fun getComments(): List<Comments>
 
-    @GET("/albums")
+    @GET("albums")
     suspend fun getAlbums(): List<Albums>
 
-    @GET("/photos")
+    @GET("photos")
     suspend fun getPhotos(): List<Photos>
 
-    @GET("/todos")
+    @GET("todos")
     suspend fun getTodos(): List<Todos>
 
-    @GET("/users")
+    @GET("users")
     suspend fun getUsers(): List<Users>
 }
 
 enum class CallStatus {
     LOADING, ERROR, DONE
+}
+
+fun main(){
 }
