@@ -8,7 +8,7 @@ import com.example.sptapi.api_resource.*
 import com.example.sptapi.retrofitService
 import kotlinx.coroutines.launch
 
-class MarsViewModel : ViewModel() {
+class TypiViewModel : ViewModel() {
     val postsListLive = MutableLiveData<List<Posts>>()
     val commentsListLive = MutableLiveData<List<Comments>>()
     val albumsListLive = MutableLiveData<List<Albums>>()
