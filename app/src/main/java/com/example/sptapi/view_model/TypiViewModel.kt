@@ -16,9 +16,7 @@ class TypiViewModel : ViewModel() {
     val todosListLive = MutableLiveData<List<Todos>>()
     val usersListLive = MutableLiveData<List<Users>>()
 
-
-    var currentCallStatus = MutableLiveData<CallStatus>(CallStatus.LOADING)
-
+    var currentCallStatus = MutableLiveData(CallStatus.LOADING)
 
     fun getPosts() {
         currentCallStatus.value = CallStatus.LOADING

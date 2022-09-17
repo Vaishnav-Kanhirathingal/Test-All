@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="@color/card"
     app:cardElevation="@dimen/card_elevation"
     app:cardUseCompatPadding="true">
 
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/card_elevation">
+        android:padding="@dimen/sub_card_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/card_elevation"
+                android:layout_marginEnd="@dimen/sub_card_margin"
                 android:layout_weight="1"
                 android:maxLines="1"
                 tools:text="1." />
@@ -39,7 +40,7 @@
                 android:id="@+id/user_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/card_elevation"
+                android:layout_marginStart="@dimen/sub_card_margin"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:textAlignment="textEnd"
@@ -53,15 +54,16 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            app:cardElevation="@dimen/sub_card_elevation"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/card_layer_one"
-            app:cardUseCompatPadding="true"
-            android:layout_height="wrap_content">
+            app:cardElevation="@dimen/sub_card_elevation"
+            app:cardUseCompatPadding="true">
+
             <TextView
-                android:padding="@dimen/card_elevation"
                 android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/sub_card_margin"
                 tools:text="quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto" />
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

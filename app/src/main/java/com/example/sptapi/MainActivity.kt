@@ -1,11 +1,10 @@
 package com.example.sptapi
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sptapi.databinding.ActivityMainBinding
-import com.example.sptapi.recyclers.AlbumAdapter
-import com.example.sptapi.recyclers.CommentAdapter
-import com.example.sptapi.recyclers.PhotosAdapter
+import com.example.sptapi.recyclers.*
 import com.example.sptapi.view_model.TypiViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -22,15 +21,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun applyBinding() {
         val albumAdapter = AlbumAdapter()
-        val photosAdapter = PhotosAdapter(layoutInflater = layoutInflater, context = this)
         val commentAdapter = CommentAdapter()
+        val photosAdapter = PhotosAdapter(layoutInflater = layoutInflater, context = this)
+        val postsAdapter = PostsAdapter()
+        val todosAdapter = TodosAdapter()
+        val usersAdapter = UsersAdapter()
 
         viewModel.apply {
             getAlbums();getComments();getPhotos();getPosts();getTodos();getUsers()
 
             albumsListLive.observe(this@MainActivity) { albumAdapter.submitList(it) }
-            photosListLive.observe(this@MainActivity) { photosAdapter.submitList(it) }
             commentsListLive.observe(this@MainActivity) { commentAdapter.submitList(it) }
+            photosListLive.observe(this@MainActivity) { photosAdapter.submitList(it) }
+            postsListLive.observe(this@MainActivity) { postsAdapter.submitList(it) }
+            todosListLive.observe(this@MainActivity) { todosAdapter.submitList(it) }
+            usersListLive.observe(this@MainActivity) { usersAdapter.submitList(it) }
+
+            currentCallStatus.observe(this@MainActivity) {
+                when (it) {
+                    CallStatus.ERROR -> {
+                        binding.statusDisplay.visibility = View.VISIBLE
+                        binding.statusDisplay.setImageResource(R.drawable.error_24)
+                    }
+                    CallStatus.LOADING -> {
+                        binding.statusDisplay.visibility = View.VISIBLE
+                        binding.statusDisplay.setImageResource(R.drawable.error_24)
+                    }
+                    CallStatus.DONE -> binding.statusDisplay.visibility = View.GONE
+                }
+            }
         }
         binding.appBar.setOnMenuItemClickListener {
             binding.recycler.adapter = when (it.itemId) {
@@ -44,13 +63,13 @@ class MainActivity : AppCompatActivity() {
                     viewModel.getPhotos();photosAdapter
                 }
                 R.id.posts -> {
-                    viewModel.getPosts();albumAdapter
+                    viewModel.getPosts();postsAdapter
                 }
                 R.id.todos -> {
-                    viewModel.getTodos();albumAdapter
+                    viewModel.getTodos();todosAdapter
                 }
                 R.id.users -> {
-                    viewModel.getUsers();albumAdapter
+                    viewModel.getUsers();usersAdapter
                 }
                 else -> albumAdapter
             }

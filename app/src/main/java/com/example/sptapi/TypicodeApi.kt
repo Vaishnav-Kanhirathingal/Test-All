@@ -5,13 +5,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-val retrofit = Retrofit
+val retrofit: Retrofit = Retrofit
     .Builder()
     .baseUrl("https://jsonplaceholder.typicode.com/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
-val retrofitService :TypicodeApi by lazy { retrofit.create(TypicodeApi::class.java) }
+val retrofitService: TypicodeApi by lazy { retrofit.create(TypicodeApi::class.java) }
 
 interface TypicodeApi {
     @GET("posts")

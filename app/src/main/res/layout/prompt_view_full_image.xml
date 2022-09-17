@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/card_elevation">
+    android:padding="@dimen/sub_card_margin">
 
     <TextView
         android:id="@+id/image_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/card_elevation"
+        android:layout_margin="@dimen/sub_card_margin"
         android:textAlignment="center"
         android:textSize="24sp"
         tools:text="full image:" />

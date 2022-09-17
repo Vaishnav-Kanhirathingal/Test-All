@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="@color/card"
     app:cardElevation="@dimen/card_elevation"
     app:cardUseCompatPadding="true">
 
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/card_elevation">
+        android:padding="@dimen/sub_card_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +31,7 @@
                 android:id="@+id/user_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/card_elevation"
+                android:layout_marginHorizontal="@dimen/sub_card_margin"
                 android:layout_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/id_text"
                 app:layout_constraintRight_toRightOf="parent"
@@ -58,7 +59,7 @@
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:layout_weight="1"
                     tools:text="Leanne Graham" />
             </LinearLayout>
@@ -77,7 +78,7 @@
                     android:id="@+id/email"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:layout_weight="1"
                     tools:text="Sincere@april.biz" />
             </LinearLayout>
@@ -96,7 +97,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:backgroundTint="@color/card_layer_one"
                     android:elevation="@dimen/sub_card_elevation"
                     app:cardUseCompatPadding="true">
@@ -105,7 +106,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="@dimen/card_elevation">
+                        android:padding="@dimen/sub_card_margin">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -122,7 +123,7 @@
                                 android:id="@+id/street"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="Kulas Light" />
@@ -143,7 +144,7 @@
                                 android:id="@+id/suite"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="Apt. 556" />
@@ -164,7 +165,7 @@
                                 android:id="@+id/city"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="Gwenborough" />
@@ -185,7 +186,7 @@
                                 android:id="@+id/zip_code"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="92998-3874" />
@@ -206,7 +207,7 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:backgroundTint="@color/card_layer_two"
                                 android:elevation="@dimen/sub_card_elevation"
@@ -216,7 +217,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
-                                    android:padding="@dimen/card_elevation">
+                                    android:padding="@dimen/sub_card_margin">
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -233,7 +234,7 @@
                                             android:id="@+id/latitude"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginStart="@dimen/card_elevation"
+                                            android:layout_marginStart="@dimen/sub_card_margin"
                                             android:layout_weight="1"
                                             android:textSize="@dimen/text_small"
                                             tools:text="-37.3159" />
@@ -254,7 +255,7 @@
                                             android:id="@+id/longitude"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginStart="@dimen/card_elevation"
+                                            android:layout_marginStart="@dimen/sub_card_margin"
                                             android:layout_weight="1"
                                             android:textSize="@dimen/text_small"
                                             tools:text="81.1496" />
@@ -282,7 +283,7 @@
                     android:id="@+id/phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:layout_weight="1"
                     tools:text="1-770-736-8031 x56442" />
             </LinearLayout>
@@ -301,7 +302,7 @@
                     android:id="@+id/website"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:layout_weight="1"
                     tools:text="hildegard.org" />
             </LinearLayout>
@@ -321,7 +322,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/card_elevation"
+                    android:layout_marginStart="@dimen/sub_card_margin"
                     android:backgroundTint="@color/card_layer_one"
                     app:cardElevation="@dimen/sub_card_elevation"
                     app:cardUseCompatPadding="true">
@@ -330,7 +331,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="@dimen/card_elevation">
+                        android:padding="@dimen/sub_card_margin">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -347,7 +348,7 @@
                                 android:id="@+id/company_name"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="Romaguera-Crona" />
@@ -365,10 +366,10 @@
                                 android:textSize="@dimen/text_small" />
 
                             <TextView
-                                android:id="@+id/catch_phrase"
+                                android:id="@+id/company_catch_phrase"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="Multi-layered client-server neural-net" />
@@ -386,10 +387,10 @@
                                 android:textSize="@dimen/text_small" />
 
                             <TextView
-                                android:id="@+id/bs"
+                                android:id="@+id/company_bs"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/card_elevation"
+                                android:layout_marginStart="@dimen/sub_card_margin"
                                 android:layout_weight="1"
                                 android:textSize="@dimen/text_small"
                                 tools:text="harness real-time e-markets" />
