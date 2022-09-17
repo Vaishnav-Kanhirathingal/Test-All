@@ -50,7 +50,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="2dp"
+            android:backgroundTint="@color/card_layer_one"
+            app:cardElevation="@dimen/sub_card_elevation"
             app:cardUseCompatPadding="true">
 
             <TextView

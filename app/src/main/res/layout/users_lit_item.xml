@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/card_elevation"
                     android:backgroundTint="@color/card_layer_one"
-                    android:elevation="2dp"
+                    android:elevation="@dimen/sub_card_elevation"
                     app:cardUseCompatPadding="true">
 
                     <LinearLayout
@@ -209,7 +209,7 @@
                                 android:layout_marginStart="@dimen/card_elevation"
                                 android:layout_weight="1"
                                 android:backgroundTint="@color/card_layer_two"
-                                android:elevation="2dp"
+                                android:elevation="@dimen/sub_card_elevation"
                                 app:cardUseCompatPadding="true">
 
                                 <LinearLayout
@@ -323,7 +323,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/card_elevation"
                     android:backgroundTint="@color/card_layer_one"
-                    app:cardElevation="2dp"
+                    app:cardElevation="@dimen/sub_card_elevation"
                     app:cardUseCompatPadding="true">
 
                     <LinearLayout
