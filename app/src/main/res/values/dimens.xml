@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="sub_card_margin">10dp</dimen>
-    <dimen name="text_small">12sp</dimen>
-    <dimen name="sub_card_elevation">2dp</dimen>
-    <dimen name="card_elevation">2dp</dimen>
-    <dimen name="card_spacing">10dp</dimen>
-</resources>
