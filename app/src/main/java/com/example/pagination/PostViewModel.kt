@@ -2,9 +2,18 @@ package com.example.pagination
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.example.pagination.repository.QuoteRepository
+import androidx.paging.liveData
+import com.example.pagination.paging.QuotePagingSource
+import com.example.pagination.retro.QuotesApi
 
-class PostViewModel(private val quoteRepository: QuoteRepository) : ViewModel() {
-    val list = quoteRepository.getQuotes().cachedIn(viewModelScope)
+class PostViewModel() : ViewModel() {
+    private val pagingData = Pager(
+        config = PagingConfig(pageSize = 20, maxSize = 100),
+        pagingSourceFactory = { QuotePagingSource(quotesApi = QuotesApi.retroFitApi) }
+    ).liveData
+
+    val list = pagingData.cachedIn(viewModelScope)
 }

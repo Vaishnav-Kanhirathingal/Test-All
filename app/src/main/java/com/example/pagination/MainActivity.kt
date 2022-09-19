@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pagination.databinding.ActivityMainBinding
 import com.example.pagination.paging.PostPagingAdapter
-import com.example.pagination.repository.QuoteRepository
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -15,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = PostViewModel(QuoteRepository())
+        viewModel = PostViewModel()
         binding.quotesList.setHasFixedSize(true)
         val adapter = PostPagingAdapter()
         binding.quotesList.adapter = adapter

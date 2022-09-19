@@ -9,8 +9,9 @@ import com.example.pagination.databinding.QuotesItemBinding
 import com.example.pagination.model.Result
 
 class PostPagingAdapter : PagingDataAdapter<Result, PostPagingAdapter.PostViewHolder>(diffUtil) {
-    class PostViewHolder(private val binding: QuotesItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class PostViewHolder(
+        private val binding: QuotesItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(result: Result?) {
             binding.quote.text = result?.content ?: "not found"
         }
