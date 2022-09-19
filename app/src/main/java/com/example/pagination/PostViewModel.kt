@@ -10,10 +10,8 @@ import com.example.pagination.paging.QuotePagingSource
 import com.example.pagination.retro.QuotesApi
 
 class PostViewModel() : ViewModel() {
-    private val pagingData = Pager(
+    val pagingData = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100),
         pagingSourceFactory = { QuotePagingSource(quotesApi = QuotesApi.retroFitApi) }
-    ).liveData
-
-    val list = pagingData.cachedIn(viewModelScope)
+    ).liveData.cachedIn(viewModelScope)
 }

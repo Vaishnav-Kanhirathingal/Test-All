@@ -10,6 +10,10 @@ class QuotePagingSource(private val quotesApi: QuotesApi) : PagingSource<Int, Re
         return try {
             val position = params.key ?: 1
             val response = quotesApi.getQuotes(position)
+            /**
+             * the load function has the responsibility of adding a list of result to be loaded
+             * for the recycler. Each element of this Result list is a list item.
+             */
             LoadResult.Page(
                 data = response.results,
                 prevKey = if (position == 1) null else position - 1,
