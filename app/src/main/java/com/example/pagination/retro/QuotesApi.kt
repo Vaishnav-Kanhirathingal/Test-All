@@ -7,6 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface QuotesApi {
+    /**
+     * this function returns a Quote List object that contains a list of
+     * result objects. This list is to be shown in the recycler view
+     */
     @GET("/quotes")
     suspend fun getQuotes(@Query("page") page: Int): QuoteList
 
