@@ -70,7 +70,11 @@ fun FeedPage(
                 content = {
 
                     Button(
-                        onClick = { FirebaseFunctions.uploadToFirebase(TestData.getPostList()) },
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            FirebaseFunctions.uploadToFirebase(TestData.getPostList())
+                            FirebaseFunctions.addComments()
+                        },
                         content = { Text(text = "Add Test objects to database") }
                     )
                     val list = remember { mutableStateListOf<DocumentSnapshot>() }
@@ -85,10 +89,11 @@ fun FeedPage(
                     )
                     for (i in list) {
                         FeedPost(
-                            post = Post.fromDocumentSnapshot(i) ,
+                            post = Post.fromDocumentSnapshot(i),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(all = CustomValues.Padding.small)
+                                .padding(all = CustomValues.Padding.small),
+                            toComments = toComments
                         )
                     }
                 }
@@ -98,7 +103,11 @@ fun FeedPage(
 }
 
 @Composable
-fun FeedPost(post: Post, modifier: Modifier = Modifier) {
+fun FeedPost(
+    post: Post,
+    modifier: Modifier = Modifier,
+    toComments: () -> Unit
+) {
     Column(
         modifier = modifier,
         content = {
@@ -174,6 +183,7 @@ fun FeedPost(post: Post, modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.Center,
                         content = {
                             Icon(
+                                modifier = Modifier.clickable(onClick = toComments),
                                 painter = painterResource(id = R.drawable.chat_bubble_24),
                                 contentDescription = null
                             )

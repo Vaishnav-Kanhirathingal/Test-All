@@ -18,5 +18,12 @@ object FirebaseConstants {
         }
     }
 
+    object Comment {
+        const val commentKey = "commentKey"
+        const val userKey = "userKey"
+        const val userImageURLKey = "userImageURLKey"
+    }
+
     const val nullId = "null_key"
+    const val commentListKey = "commentListKey"
 }
