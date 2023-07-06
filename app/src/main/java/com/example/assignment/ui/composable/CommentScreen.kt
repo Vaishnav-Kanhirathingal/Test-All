@@ -1,4 +1,7 @@
 package com.example.assignment.ui.composable
 
-class CommentScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun CommentScreen() {
 }
