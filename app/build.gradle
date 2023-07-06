@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -56,6 +57,7 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -70,4 +72,12 @@ dependencies {
     implementation "androidx.paging:paging-compose:3.2.0-rc01"
     //------------------------------------------------------------------------------------------coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+    //-------------------------------------------------------------------------------------exoplayer
+//    implementation 'com.google.android.exoplayer:exoplayer:2.19.0'
+    implementation "androidx.media3:media3-exoplayer:1.1.0"
+
+    implementation 'androidx.media3:media3-exoplayer-dash:1.1.0'
+    implementation 'androidx.media3:media3-ui:1.1.0'
+    //------------------------------------------------------------------------------------------gson
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

@@ -3,6 +3,8 @@ package com.example.assignment.ui.composable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -15,7 +17,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,21 +27,32 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.example.assignment.R
 import com.example.assignment.data.Post
 import com.example.assignment.data.PostType
 import com.example.assignment.data.TestData
+import com.example.assignment.data.firebase.FirebaseFunctions
 import com.example.assignment.values.CustomValues
+import com.google.firebase.firestore.DocumentSnapshot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,9 +68,25 @@ fun FeedPage(
                     .fillMaxSize()
                     .verticalScroll(ScrollState(0)),
                 content = {
-                    for (i in TestData.getPostList()) {
+
+                    Button(
+                        onClick = { FirebaseFunctions.uploadToFirebase(TestData.getPostList()) },
+                        content = { Text(text = "Add Test objects to database") }
+                    )
+                    val list = remember { mutableStateListOf<DocumentSnapshot>() }
+                    LaunchedEffect(
+                        key1 = list,
+                        block = {
+                            FirebaseFunctions.getListOfPosts { listOfDS ->
+                                list.clear()
+                                list.addAll(listOfDS)
+                            }
+                        }
+                    )
+                    for (i in list) {
                         FeedPost(
-                            post = i, modifier = Modifier
+                            post = Post.fromDocumentSnapshot(i) ,
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(all = CustomValues.Padding.small)
                         )
@@ -86,8 +117,9 @@ fun FeedPost(post: Post, modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .padding(start = CustomValues.Padding.tiny)
                             .height(50.dp)
+                            .clip(CircleShape)
                             .aspectRatio(1f),
-                        model = "https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg",
+                        model = post.authorImageURL,
                         contentDescription = null,
                         error = painterResource(id = R.drawable.ic_launcher_foreground),
                         contentScale = ContentScale.Crop
@@ -119,6 +151,7 @@ fun FeedPost(post: Post, modifier: Modifier = Modifier) {
             } else if (post.multimedia.audioFile != null) {
                 MultiMediaAudioContent(audioUrl = post.multimedia.audioFile)
             } else if (post.multimedia.videoFile != null) {
+                MultiMediaVideoContent(videoUrl = post.multimedia.videoFile)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -193,7 +226,7 @@ fun MultiMediaAudioContent(audioUrl: String) {
     val playing = remember { mutableStateOf(false) }
     Text(
         modifier = Modifier.fillMaxWidth(),
-        text = "Audio",
+        text = "Play Audio File",
         fontSize = CustomValues.FontSize.Big,
         textAlign = TextAlign.Center
     )
@@ -239,4 +272,30 @@ fun MultiMediaAudioContent(audioUrl: String) {
 
 @Composable
 fun MultiMediaVideoContent(videoUrl: String) {
+    val context = LocalContext.current
+    val exoPlayer = ExoPlayer.Builder(context).build()
+    val mediaItem = MediaItem.fromUri(videoUrl)
+    exoPlayer.setMediaItem(mediaItem)
+    DisposableEffect(
+        AndroidView(
+            modifier =
+            Modifier
+                .testTag("VideoPlayer")
+                .fillMaxWidth(),
+            factory = {
+
+                PlayerView(context).apply {
+                    player = exoPlayer
+                    layoutParams = FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                }
+            }
+        )
+    ) {
+        onDispose {
+            exoPlayer.release()
+        }
+    }
 }
