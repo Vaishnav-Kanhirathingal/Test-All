@@ -1,7 +1,10 @@
 package com.example.assignment.ui.composable
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,21 +15,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.assignment.R
+import com.example.assignment.data.Post
 import com.example.assignment.data.PostType
 import com.example.assignment.data.TestData
 import com.example.assignment.values.CustomValues
@@ -40,32 +48,39 @@ fun FeedPage(
         modifier = Modifier.fillMaxSize(),
         content = {
             Column(
-                modifier = Modifier.padding(it),
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+                    .verticalScroll(ScrollState(0)),
                 content = {
-                    Button(
-                        modifier = Modifier.padding(it),
-                        onClick = toComments,
-                        content = {
-                            Text(text = "Comments")
-                        }
-                    )
-                    FeedPost()
+                    for (i in TestData.getPostList()) {
+                        FeedPost(
+                            post = i, modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(all = CustomValues.Padding.small)
+                        )
+                    }
                 }
             )
         }
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun FeedPost() {
-    val post = TestData.getPostList()[0]
+fun FeedPost(post: Post, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(all = CustomValues.Padding.tiny),
+        modifier = modifier,
         content = {
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = CustomValues.Padding.small)
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 content = {
                     AsyncImage(
                         modifier = Modifier
@@ -97,25 +112,12 @@ fun FeedPost() {
                 text = post.postText
             )
             if (post.multimedia.imageArray != null) {
-                Row(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .padding(vertical = CustomValues.Padding.small)
-                        .fillMaxWidth()
-                        .horizontalScroll(ScrollState(0)),
-                    content = {
-                        for (imageUrl in post.multimedia.imageArray) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(horizontal = CustomValues.Padding.tiny),
-                                model = imageUrl, contentDescription = null,
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    }
+                MultiMediaImageArrayContent(
+                    imageArray = post.multimedia.imageArray,
+                    modifier = Modifier.padding(vertical = CustomValues.Padding.small)
                 )
             } else if (post.multimedia.audioFile != null) {
+                MultiMediaAudioContent(audioUrl = post.multimedia.audioFile)
             } else if (post.multimedia.videoFile != null) {
             }
             Row(
@@ -150,4 +152,91 @@ fun FeedPost() {
             )
         }
     )
+}
+
+@Composable
+fun MultiMediaImageArrayContent(imageArray: List<String>, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .height(200.dp)
+            .fillMaxWidth()
+            .horizontalScroll(ScrollState(0)),
+        content = {
+            for (imageUrl in imageArray) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = CustomValues.Padding.tiny),
+                    model = imageUrl, contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun MultiMediaAudioContent(audioUrl: String) {
+    val context = LocalContext.current
+    val mediaPlayer = MediaPlayer()
+    try {
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                .build()
+        )
+        mediaPlayer.setDataSource(context, Uri.parse(audioUrl))
+        mediaPlayer.prepare()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    val playing = remember { mutableStateOf(false) }
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = "Audio",
+        fontSize = CustomValues.FontSize.Big,
+        textAlign = TextAlign.Center
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        content = {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .padding(bottom = CustomValues.Padding.small)
+                    .clickable {
+                        try {
+                            if (playing.value) {
+                                mediaPlayer.pause()
+                            } else {
+                                mediaPlayer.start()
+                            }
+                            playing.value = !playing.value
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    },
+                content = {
+                    Row(
+                        modifier = Modifier
+                            .padding(CustomValues.Padding.small)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        content = {
+                            Icon(
+                                painter = painterResource(if (playing.value) R.drawable.pause_24 else R.drawable.play_24),
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    )
+}
+
+@Composable
+fun MultiMediaVideoContent(videoUrl: String) {
 }
