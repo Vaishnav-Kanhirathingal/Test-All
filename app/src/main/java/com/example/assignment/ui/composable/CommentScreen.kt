@@ -1,6 +1,7 @@
 package com.example.assignment.ui.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -54,6 +55,7 @@ fun CommentScreen(
         content = {
             Column(
                 modifier = Modifier.padding(it),
+                verticalArrangement = Arrangement.Center,
                 content = {
                     val documentSnapshot = remember { mutableStateOf<DocumentSnapshot?>(null) }
                     postId?.let {
@@ -62,30 +64,43 @@ fun CommentScreen(
                             onReceive = { ds -> documentSnapshot.value = ds }
                         )
                     }
-                    if (documentSnapshot.value != null) {
+
+                    if (documentSnapshot.value == null || commentList.isEmpty()) {
+                        LoadingCard()
+                    } else {
                         FeedPost(
                             documentSnapshot = documentSnapshot.value!!,
                             toComments = {},
-                            modifier = Modifier.padding(bottom = 40.dp)
+                            modifier = Modifier
+                                .padding(
+                                    top = CustomValues.Padding.small,
+                                    bottom = 40.dp,
+                                    start = CustomValues.Padding.small,
+                                    end = CustomValues.Padding.small,
+                                )
+                                .fillMaxWidth(),
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = CustomValues.Padding.small),
+                            text = "Comments:-",
+                            fontSize = CustomValues.FontSize.Big
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(CustomValues.Padding.small)
+                                .background(Color(red = 0xF0, green = 0xF0, blue = 0xF0)),
+                            content = {
+                                items(
+                                    count = commentList.size,
+                                    itemContent = { count: Int ->
+                                        Divider(modifier = Modifier.fillMaxWidth())
+                                        Comment(comment = Comment.fromDocumentSnapshot(commentList[count]))
+                                    }
+                                )
+                            }
                         )
                     }
-                    Text(text = "Comments", fontSize = CustomValues.FontSize.Big)
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(CustomValues.Padding.small)
-                            .background(Color(red = 0xF0, green = 0xF0, blue = 0xF0)),
-                        content = {
-                            items(
-                                count = commentList.size,
-                                itemContent = { count: Int ->
-                                    Divider(modifier = Modifier.fillMaxWidth())
-                                    Comment(comment = Comment.fromDocumentSnapshot(commentList[count]))
-                                }
-                            )
-                        }
-                    )
-
                 }
             )
         }

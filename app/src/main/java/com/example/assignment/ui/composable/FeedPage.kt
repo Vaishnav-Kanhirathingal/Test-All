@@ -7,6 +7,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,13 +18,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -36,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
@@ -55,21 +62,15 @@ fun FeedPage(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = { FeedPageTopBar() },
         content = {
             Column(
                 modifier = Modifier
                     .padding(it)
                     .fillMaxSize()
                     .verticalScroll(ScrollState(0)),
+                verticalArrangement = Arrangement.Center,
                 content = {
-                    Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        onClick = {
-                            FirebaseFunctions.uploadToFirebase(TestData.getPostList())
-                            FirebaseFunctions.addComments()
-                        },
-                        content = { Text(text = "Add Test objects to database") }
-                    )
                     val list = remember { mutableStateListOf<DocumentSnapshot>() }
                     LaunchedEffect(
                         key1 = list,
@@ -80,15 +81,50 @@ fun FeedPage(
                             }
                         }
                     )
-                    for (i in list) {
-                        FeedPost(
-                            documentSnapshot = i,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(all = CustomValues.Padding.small),
-                            toComments = toComments
-                        )
+                    if (list.isEmpty()) {
+                        LoadingCard(modifier = Modifier.fillMaxSize())
+                    } else {
+                        for (i in list) {
+                            FeedPost(
+                                documentSnapshot = i,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(all = CustomValues.Padding.small),
+                                toComments = toComments
+                            )
+                        }
                     }
+                }
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FeedPageTopBar() {
+    TopAppBar(
+        title = { Text(text = "Feed") },
+        actions = {
+            IconButton(
+                onClick = { TODO("Exit") },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = null
+                    )
+                }
+            )
+            IconButton(
+                onClick = {
+                    FirebaseFunctions.uploadToFirebase(TestData.getPostList())
+                    FirebaseFunctions.addComments()
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "Add Test objects to database"
+                    )
                 }
             )
         }
@@ -306,4 +342,26 @@ fun MultiMediaVideoContent(videoUrl: String) {
 //            exoPlayer.release()
 //        }
 //    }
+}
+
+@Preview
+@Composable
+fun LoadingCard(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+        content = {
+            Card(
+                modifier = Modifier.padding(30.dp),
+                content = {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .padding(30.dp)
+                    )
+                }
+            )
+        }
+    )
 }
