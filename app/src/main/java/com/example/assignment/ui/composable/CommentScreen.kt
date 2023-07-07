@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,12 +26,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.assignment.data.Comment
+import com.example.assignment.data.TestData
 import com.example.assignment.data.firebase.FirebaseFunctions
 import com.example.assignment.values.CustomValues
 import com.google.firebase.firestore.DocumentSnapshot
@@ -62,9 +66,10 @@ fun CommentScreen(
                         FeedPost(
                             documentSnapshot = documentSnapshot.value!!,
                             toComments = {},
-                            modifier = Modifier.padding(bottom = 60.dp)
+                            modifier = Modifier.padding(bottom = 40.dp)
                         )
                     }
+                    Text(text = "Comments", fontSize = CustomValues.FontSize.Big)
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -74,6 +79,7 @@ fun CommentScreen(
                             items(
                                 count = commentList.size,
                                 itemContent = { count: Int ->
+                                    Divider(modifier = Modifier.fillMaxWidth())
                                     Comment(comment = Comment.fromDocumentSnapshot(commentList[count]))
                                 }
                             )
@@ -111,9 +117,17 @@ fun CommentTopBar(navigateUp: () -> Unit) {
 }
 
 @Composable
+@Preview(showBackground = true)
+fun CommentPrev() {
+    Comment(comment = TestData.getCommentList()[0])
+}
+
+@Composable
 fun Comment(comment: Comment) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = CustomValues.Padding.small),
         content = {
             val rowHeight = 50.dp
             Row(
@@ -125,6 +139,7 @@ fun Comment(comment: Comment) {
                     AsyncImage(
                         modifier = Modifier
                             .height(rowHeight)
+                            .clip(CircleShape)
                             .aspectRatio(1f),
                         model = comment.userImageURL,
                         contentDescription = null,
@@ -132,7 +147,8 @@ fun Comment(comment: Comment) {
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = comment.user
+                        text = "\t${comment.user}",
+                        fontSize = CustomValues.FontSize.Medium
                     )
                 }
             )

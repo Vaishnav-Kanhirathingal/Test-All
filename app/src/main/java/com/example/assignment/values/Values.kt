@@ -11,5 +11,6 @@ object CustomValues {
 
     object FontSize{
         val Big = 30.sp
+        val Medium = 20.sp
     }
 }
