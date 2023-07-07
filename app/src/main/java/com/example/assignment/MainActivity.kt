@@ -9,9 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.assignment.ui.composable.CommentScreen
 import com.example.assignment.ui.composable.FeedPage
 import com.example.assignment.ui.composable.destinations.Destination
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun AssignmentNavHost(modifier: Modifier = Modifier) {
+    val postIdKey = "postIdKey"
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
@@ -46,15 +49,29 @@ fun AssignmentNavHost(modifier: Modifier = Modifier) {
                 route = Destination.feedPage,
                 content = {
                     FeedPage(
-                        toComments = {
-                            navController.navigate(Destination.commentScreen)
+                        toComments = { postId ->
+                            navController.navigate("${Destination.commentScreen}/$postId")
                         }
                     )
                 }
             )
             composable(
-                route = Destination.commentScreen,
-                content = { CommentScreen() }
+                route = "${Destination.commentScreen}/{$postIdKey}",
+                arguments = listOf(
+                    navArgument(
+                        name = postIdKey,
+                        builder = {
+                            type = NavType.StringType
+                        }
+                    )
+                ),
+                content = { navBackStackEntry ->
+                    val postId = navBackStackEntry.arguments?.getString(postIdKey)
+                    CommentScreen(
+                        postId = postId,
+                        navigateUp = { navController.navigateUp() }
+                    )
+                }
             )
         }
     )

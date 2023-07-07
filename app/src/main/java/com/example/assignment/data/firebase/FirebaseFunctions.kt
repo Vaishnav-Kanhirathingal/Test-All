@@ -37,9 +37,21 @@ object FirebaseFunctions {
             .addOnFailureListener { it.printStackTrace() }
     }
 
+    fun getPost(postId: String, onReceive: (DocumentSnapshot) -> Unit) {
+        val firebase = FirebaseFirestore.getInstance()
+        firebase
+            .collection(FirebaseConstants.listOfPostKey)
+            .document(postId)
+            .get()
+            .addOnSuccessListener(onReceive)
+            .addOnFailureListener { it.printStackTrace() }
+
+    }
+
     fun addComments() {
         val firebase = FirebaseFirestore.getInstance()
-        val listDoc = firebase.collection(FirebaseConstants.commentListKey).document(FirebaseConstants.commentListKey)
+        val listDoc = firebase.collection(FirebaseConstants.commentListKey)
+            .document(FirebaseConstants.commentListKey)
 
         val testList = TestData.getCommentList()
         val limit = testList.size

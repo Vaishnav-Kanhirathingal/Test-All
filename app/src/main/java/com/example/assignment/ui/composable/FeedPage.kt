@@ -3,8 +3,6 @@ package com.example.assignment.ui.composable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -27,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,14 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.example.assignment.R
 import com.example.assignment.data.Post
@@ -57,7 +51,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedPage(
-    toComments: () -> Unit
+    toComments: (String) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +62,6 @@ fun FeedPage(
                     .fillMaxSize()
                     .verticalScroll(ScrollState(0)),
                 content = {
-
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
@@ -89,7 +82,7 @@ fun FeedPage(
                     )
                     for (i in list) {
                         FeedPost(
-                            post = Post.fromDocumentSnapshot(i),
+                            documentSnapshot = i,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(all = CustomValues.Padding.small),
@@ -104,10 +97,11 @@ fun FeedPage(
 
 @Composable
 fun FeedPost(
-    post: Post,
+    documentSnapshot: DocumentSnapshot,
     modifier: Modifier = Modifier,
-    toComments: () -> Unit
+    toComments: (String) -> Unit
 ) {
+    val post = Post.fromDocumentSnapshot(documentSnapshot)
     Column(
         modifier = modifier,
         content = {
@@ -183,7 +177,11 @@ fun FeedPost(
                         horizontalArrangement = Arrangement.Center,
                         content = {
                             Icon(
-                                modifier = Modifier.clickable(onClick = toComments),
+                                modifier = Modifier.clickable(onClick = {
+                                    toComments(
+                                        documentSnapshot.id
+                                    )
+                                }),
                                 painter = painterResource(id = R.drawable.chat_bubble_24),
                                 contentDescription = null
                             )
@@ -286,26 +284,26 @@ fun MultiMediaVideoContent(videoUrl: String) {
     val exoPlayer = ExoPlayer.Builder(context).build()
     val mediaItem = MediaItem.fromUri(videoUrl)
     exoPlayer.setMediaItem(mediaItem)
-    DisposableEffect(
-        AndroidView(
-            modifier =
-            Modifier
-                .testTag("VideoPlayer")
-                .fillMaxWidth(),
-            factory = {
-
-                PlayerView(context).apply {
-                    player = exoPlayer
-                    layoutParams = FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
-        )
-    ) {
-        onDispose {
-            exoPlayer.release()
-        }
-    }
+//    DisposableEffect(
+//        AndroidView(
+//            modifier =
+//            Modifier
+//                .testTag("VideoPlayer")
+//                .fillMaxWidth(),
+//            factory = {
+//
+//                PlayerView(context).apply {
+//                    player = exoPlayer
+//                    layoutParams = FrameLayout.LayoutParams(
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+//                        ViewGroup.LayoutParams.MATCH_PARENT
+//                    )
+//                }
+//            }
+//        )
+//    ) {
+//        onDispose {
+//            exoPlayer.release()
+//        }
+//    }
 }
