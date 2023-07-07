@@ -1,7 +1,6 @@
 package com.example.assignment.data.firebase
 
 import android.util.Log
-import com.example.assignment.data.Post
 import com.example.assignment.data.TestData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,7 +8,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 object FirebaseFunctions {
     val TAG = this::class.java.simpleName
 
-    fun uploadToFirebase(postList: List<Post>) {
+    fun uploadTestPostToFirebase() {
+        val postList = TestData.getPostList()
         val size = postList.size
         var counter = 0
         val firebase = FirebaseFirestore.getInstance()
@@ -28,6 +28,43 @@ object FirebaseFunctions {
         }
     }
 
+    @Deprecated("unstable")
+    fun uploadTestPostToFirebaseTest() {
+        val onFailure = { e: java.lang.Exception -> e.printStackTrace() }
+        val firebase = FirebaseFirestore.getInstance()
+        val pageListDoc = firebase
+            .collection(FirebaseConstants.listOfPostKey)
+            .document(FirebaseConstants.listOfPostKey)
+        val limit = 10
+        var pageCounter = 0
+        repeat(
+            times = limit,
+            action = { pageNumber ->
+                pageListDoc
+                    .set(hashMapOf(FirebaseConstants.listOfPostKey to FirebaseConstants.listOfPostKey))
+                    .addOnSuccessListener {
+                        val pageCollection = pageListDoc
+                            .collection("${FirebaseConstants.listOfPostKey}_$pageNumber")
+                        val postList = TestData.getPostList()
+                        val size = postList.size
+                        var postCounter = 0
+                        postList.forEach { post ->
+                            pageCollection.document().set(post.toHashMap()).addOnSuccessListener {
+                                postCounter++
+                                if (postCounter == size) {
+                                    pageCounter++
+                                    Log.d(TAG, "added a page to database")
+                                    if (pageCounter == limit) {
+                                        Log.d(TAG, "all pages added to firebase")
+                                    }
+                                }
+                            }.addOnFailureListener(onFailure)
+                        }
+                    }.addOnFailureListener(onFailure)
+            }
+        )
+    }
+
     fun getListOfPosts(onReceive: (List<DocumentSnapshot>) -> Unit) {
         val firebase = FirebaseFirestore.getInstance()
         firebase
@@ -37,7 +74,25 @@ object FirebaseFunctions {
             .addOnFailureListener { it.printStackTrace() }
     }
 
-    fun getPost(postId: String, onReceive: (DocumentSnapshot) -> Unit) {
+    @Deprecated("unstable")
+    fun getListOfPostsTest(
+        pageNumber: Int,
+        onReceive: (List<DocumentSnapshot>) -> Unit
+    ) {
+        val firebase = FirebaseFirestore.getInstance()
+        firebase
+            .collection(FirebaseConstants.listOfPostKey)
+            .document(FirebaseConstants.listOfPostKey)
+            .collection("${FirebaseConstants.listOfPostKey}_$pageNumber")
+            .get()
+            .addOnSuccessListener { onReceive(it.documents) }
+            .addOnFailureListener { it.printStackTrace() }
+    }
+
+    fun getPost(
+        postId: String,
+        onReceive: (DocumentSnapshot) -> Unit
+    ) {
         val firebase = FirebaseFirestore.getInstance()
         firebase
             .collection(FirebaseConstants.listOfPostKey)
@@ -45,7 +100,6 @@ object FirebaseFunctions {
             .get()
             .addOnSuccessListener(onReceive)
             .addOnFailureListener { it.printStackTrace() }
-
     }
 
     fun addComments() {

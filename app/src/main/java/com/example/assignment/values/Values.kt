@@ -7,6 +7,8 @@ object CustomValues {
     object Padding {
         val tiny=1.dp
         val small = 6.dp
+
+        val postHeight=300.dp
     }
 
     object FontSize{

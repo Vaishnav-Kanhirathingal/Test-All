@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -50,7 +52,6 @@ import coil.compose.AsyncImage
 import com.example.assignment.R
 import com.example.assignment.data.Post
 import com.example.assignment.data.PostType
-import com.example.assignment.data.TestData
 import com.example.assignment.data.firebase.FirebaseFunctions
 import com.example.assignment.values.CustomValues
 import com.google.firebase.firestore.DocumentSnapshot
@@ -117,8 +118,8 @@ fun FeedPageTopBar() {
             )
             IconButton(
                 onClick = {
-                    FirebaseFunctions.uploadToFirebase(TestData.getPostList())
-                    FirebaseFunctions.addComments()
+                    FirebaseFunctions.uploadTestPostToFirebase()
+//                    FirebaseFunctions.addComments()
                 },
                 content = {
                     Icon(
@@ -193,7 +194,7 @@ fun FeedPost(
                 MultiMediaVideoContent(videoUrl = post.multimedia.videoFile)
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(top = CustomValues.Padding.small),
                 content = {
                     Row(
                         modifier = Modifier.weight(1f),
@@ -213,11 +214,9 @@ fun FeedPost(
                         horizontalArrangement = Arrangement.Center,
                         content = {
                             Icon(
-                                modifier = Modifier.clickable(onClick = {
-                                    toComments(
-                                        documentSnapshot.id
-                                    )
-                                }),
+                                modifier = Modifier.clickable(
+                                    onClick = { toComments(documentSnapshot.id) }
+                                ),
                                 painter = painterResource(id = R.drawable.chat_bubble_24),
                                 contentDescription = null
                             )
@@ -235,7 +234,7 @@ fun FeedPost(
 fun MultiMediaImageArrayContent(imageArray: List<String>, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .height(200.dp)
+            .height(CustomValues.Padding.postHeight)
             .fillMaxWidth()
             .horizontalScroll(ScrollState(0)),
         content = {
@@ -268,43 +267,51 @@ fun MultiMediaAudioContent(audioUrl: String) {
         e.printStackTrace()
     }
     val playing = remember { mutableStateOf(false) }
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = "Play Audio File",
-        fontSize = CustomValues.FontSize.Big,
-        textAlign = TextAlign.Center
-    )
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+    Column(
+        modifier = Modifier
+            .height(CustomValues.Padding.postHeight)
+            .background(Color(red = 0xF0, green = 0xF0, blue = 0xF0)),
+        verticalArrangement = Arrangement.Center,
         content = {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .padding(bottom = CustomValues.Padding.small)
-                    .clickable {
-                        try {
-                            if (playing.value) {
-                                mediaPlayer.pause()
-                            } else {
-                                mediaPlayer.start()
-                            }
-                            playing.value = !playing.value
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    },
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Play Audio File",
+                fontSize = CustomValues.FontSize.Big,
+                textAlign = TextAlign.Center
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 content = {
-                    Row(
+                    Card(
                         modifier = Modifier
-                            .padding(CustomValues.Padding.small)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
+                            .fillMaxWidth(0.9f)
+                            .padding(bottom = CustomValues.Padding.small)
+                            .clickable {
+                                try {
+                                    if (playing.value) {
+                                        mediaPlayer.pause()
+                                    } else {
+                                        mediaPlayer.start()
+                                    }
+                                    playing.value = !playing.value
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            },
                         content = {
-                            Icon(
-                                painter = painterResource(if (playing.value) R.drawable.pause_24 else R.drawable.play_24),
-                                contentDescription = null
+                            Row(
+                                modifier = Modifier
+                                    .padding(CustomValues.Padding.small)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                content = {
+                                    Icon(
+                                        painter = painterResource(if (playing.value) R.drawable.pause_24 else R.drawable.play_24),
+                                        contentDescription = null
+                                    )
+                                }
                             )
                         }
                     )
