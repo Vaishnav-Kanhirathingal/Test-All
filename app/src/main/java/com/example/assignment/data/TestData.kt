@@ -24,7 +24,7 @@ object TestData {
             val post = Post(
                 authorName = "Author $i",
                 authorImageURL = "https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg",
-                postText = "Post $i content",
+                postText = listOfComments.random(),
                 postType = if (i % 2 == 0) PostType.MARKETING else PostType.QUESTION,
                 likeCount = i * 10,
                 commentCount = i * 5,
