@@ -5,13 +5,13 @@ import androidx.compose.ui.unit.sp
 
 object CustomValues {
     object Padding {
-        val tiny=1.dp
+        val tiny = 1.dp
         val small = 6.dp
 
-        val postHeight=300.dp
+        val postHeight = 300.dp
     }
 
-    object FontSize{
+    object FontSize {
         val Big = 30.sp
         val Medium = 20.sp
     }
